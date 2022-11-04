@@ -40,17 +40,15 @@ class PersonServiceImpl(
         personRepository.create(dto.name, dto.lastName)
 
     override fun update(id: Int, dto: PersonDto) {
-        if (personRepository.getById(id) == null)
-            throw EntryIsEmptyException(id)
-        else
-            personRepository.update(id, dto.name, dto.lastName)
+        personRepository.getById(id)
+            ?.let { personRepository.update(id, dto.name, dto.lastName) }
+            ?:throw EntryIsEmptyException(id)
     }
 
     override fun deleteById(id: Int) {
-        if (personRepository.getById(id) == null)
-            throw EntryIsEmptyException(id)
-        else
-            personRepository.deleteById(id)
+        personRepository.getById(id)
+            ?.let { personRepository.deleteById(id) }
+            ?:throw EntryIsEmptyException(id)
     }
 
     private fun Person.toDto() = PersonDto(
